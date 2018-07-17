@@ -28,6 +28,7 @@ class Camara
             return;
         mainLoop();
         cleanup();
+        glfwTerminate();
     }
     GLvoid rezise(uint W,uint H)
     {

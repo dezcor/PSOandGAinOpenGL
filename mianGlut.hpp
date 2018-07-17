@@ -515,7 +515,7 @@ int mainGLUT(int argc, char* argv[]) {
 	}
 
 	if (!GLEW_VERSION_3_0) {
-		fprintf(stderr, "No support for OpenGL 2.0 found\n");
+		fprintf(stderr, "No support for OpenGL 3.0 found\n");
 		return 1;
 	}
 
