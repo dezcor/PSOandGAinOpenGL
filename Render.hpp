@@ -167,6 +167,12 @@ struct vect3
         this->y=y;
         this->z=z;
     }
+    vect3(GLfloat x,GLfloat y)
+    {
+        this->x=x;
+        this->y=y;
+        this->z=1;
+    }
 };
 
 struct vect2
@@ -218,7 +224,7 @@ struct Vertex3d
 {
     vect3 Pos;
     ColorRGB color;
-    vect2 coorText;
+    vect3 coorText;
 };
 
 struct Vertex2d

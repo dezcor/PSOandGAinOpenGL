@@ -9,6 +9,7 @@
 #include "PSO/Enjambre.h"
 #include "GA/GA.h"
 #include <exception>
+#include "GLTexture.hpp"
 
 struct point
 {
@@ -75,6 +76,7 @@ class CamaraMalla : public Camara
     Malla *Piso;
     Malla * malla3;
     Cube *cubo;
+    Texture cuboGA,CuboPSO,CuboPSOI;
 	GLuint uniform_mytexture;
     static vector<bool> KEY;
     void cleanup()
@@ -122,21 +124,24 @@ class CamaraMalla : public Camara
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // draw Objetos
-        glActiveTexture(GL_TEXTURE1);
-	    glUniform1i(uniform_mytexture, /*GL_TEXTURE*/0);
-        
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(uniform_mytexture, /*GL_TEXTURE*/ 0);
+
         try
         {
             /* code */
+            cuboGA.Bin();
             malla->dcRender(GA_vertes);
             poblacion->dcRender(GA_vertes);
+            CuboPSO.Bin();
             Piso->dcRender(cmPrespetive->GetViewPerpetive() * glm::rotate(glm::mat4(1.0f), glm::radians(float(90)), glm::vec3(1, 0, 0)));
-            malla2->dcRender(PSOvertex);
-            enjambre->dcRender(PSOvertex);
             malla3->dcRender(PSOIvertex);
-            enjambreI->dcRender(PSOIvertex);
+            enjambre->dcRender(PSOIvertex);
+            CuboPSOI.Bin();
+            malla2->dcRender(PSOvertex);
+            enjambreI->dcRender(PSOvertex);
         }
-        catch(const std::exception& e)
+        catch (const std::exception &e)
         {
             std::cerr << e.what() << '\n';
         }
@@ -273,9 +278,12 @@ class CamaraMalla : public Camara
         float Limi = 1.0f;
         cmPrespetive = new CamaraView(glm::vec3(0, 1, 1), glm::radians(45.0f), (float)this->Width / (float)this->Height, 0.1f, 100.0f);
         cmOrtho = new CamaraView(glm::vec3(0, 4, 4), -4, 4, 4, -4, 10, -10);
-        programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+        programID = LoadShaders("cube.v.glsl", "cube.f.glsl");
         MatrixID = glGetUniformLocation(programID, "MVP");
         uniform_mytexture = glGetUniformLocation(programID,"TexCoord");
+        cuboGA.load("GA.jpg");
+        CuboPSO.load("res_texture.png");
+        CuboPSOI.load("PSOI.jpg");
         malla = new Malla;
         Piso = new Malla;
         malla2  = new Malla;
@@ -296,7 +304,7 @@ class CamaraMalla : public Camara
         malla2->SetNumberLines(50);
         malla2->SetLimitesX(-Limi, Limi);
         malla2->SetLimitesY(-Limi, Limi);
-        malla2->SetFuncion(F5);
+        malla2->SetFuncion(cuadratica);
         malla2->SetColor(ColorRGB(1, 0, 1));
         malla2->dcUpdate();
         malla2->SetMatrizID(MatrixID);
@@ -304,7 +312,7 @@ class CamaraMalla : public Camara
         malla3->SetNumberLines(50);
         malla3->SetLimitesX(-Limi, Limi);
         malla3->SetLimitesY(-Limi, Limi);
-        malla3->SetFuncion(cuadratica);
+        malla3->SetFuncion(F5);
         malla3->SetColor(ColorRGB(0, 1, 1));
         malla3->dcUpdate();
         malla3->SetMatrizID(MatrixID);
@@ -317,7 +325,7 @@ class CamaraMalla : public Camara
         enjambre->SetMatrizID(MatrixID);
         enjambre->SetObject(new Cube(ColorRGB(1, 1, 0)));
         enjambre->SetOffLimites(false);
-        enjambre->SetScalar(malla2->getScalar());
+        enjambre->SetScalar(malla3->getScalar());
         //PSOI inicializacion del Enjambre de particulas
         enjambreI = new PSO::EnjambrePesoI(200, 2, -Limi, Limi, -Limi * .15, Limi * .15, 2.05, 2.05, 0.7, PSO::Enjambre::Orden::MINIMO);
         enjambreI->setFuncion(cuadratica);
@@ -326,7 +334,7 @@ class CamaraMalla : public Camara
         enjambreI->SetMatrizID(MatrixID);
         enjambreI->SetObject(new Cube(ColorRGB(1, 0, 0)));
         enjambreI->SetOffLimites(false);
-        enjambreI->SetScalar(malla3->getScalar());
+        enjambreI->SetScalar(malla2->getScalar());
         //GA inicializacion de la poblacion
         Limi = 1.0f;
         poblacion = new GA::Poblacion();

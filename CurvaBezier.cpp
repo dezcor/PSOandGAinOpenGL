@@ -231,6 +231,6 @@ void CurvaBezier::dcRenderObject(glm::mat4 const &m)
     glm::mat4 tras,mvp;
     const int i = Delete?Index:0;
     tras = glm::translate(glm::mat4(1.0f),mPointsTime[i].pos);
-    mvp = m*tras*scalar*glm::rotate(glm::mat4(1.0f),glm::radians(float(i*3.6)),glm::vec3(0,1,0));
+    mvp = m*tras*scalar*glm::rotate(glm::mat4(1.0f),glm::radians(float(Index*3.6)),mPointsTime[i].pos);
     Objeto->dcRender(mvp);
 }

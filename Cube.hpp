@@ -20,7 +20,6 @@ class Cube : public Render
         ColorRGB RightColor;
         ColorRGB FrontColor;
         ColorRGB BackColor;
-        Texture GLtext;
         void FreeArray(GLuint *vpo);
         inline void dcRender(const GLuint * vpo);
     public:
@@ -41,7 +40,6 @@ class Cube : public Render
         
         Cube();
         Cube(const ColorRGB &m);
-        Cube(const ColorRGB &m,const std::string &path);
         ~Cube();
 };
 

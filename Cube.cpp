@@ -14,8 +14,6 @@ Cube::Cube()
     SetRightColor(ColorRGB(0,1,0));
     SetFrontColor(ColorRGB(1,0,0));
     SetBackColor(ColorRGB(0,1,1));
-    if(!GLtext.load("res_texture.png"))
-    std::cout << "Error: No se cargaron las texturas" << std::endl;
 }
 
 Cube::Cube(const ColorRGB & color)
@@ -33,12 +31,6 @@ Cube::Cube(const ColorRGB & color)
     SetFrontColor(color);
     SetBackColor(color);
 }
-
- Cube::Cube(const ColorRGB &m,const std::string &path):Cube(m)
- {
-     if(!GLtext.load(path))
-     std::cout << "Error: No se cargaron las texturas" << std::endl;
- }
 
 Cube::~Cube()
 {
@@ -65,10 +57,10 @@ GLvoid Cube::SetTopColor(const ColorRGB& RGB)
         Top[2]++;
     Vertex3d vertex[] =
     {
-        { vect3(1,1,-1), TopColor,   vect2(0,1)},
-        { vect3(-1,1,-1),TopColor,   vect2(1,1) },
-        { vect3(1,1,1),TopColor,     vect2(0,0)},
-        { vect3(-1 , 1, 1),TopColor, vect2(1,0) }
+        { vect3(1,1,-1), TopColor,   vect3(0,1)},
+        { vect3(-1,1,-1),TopColor,   vect3(1,1) },
+        { vect3(1,1,1),TopColor,     vect3(0,0)},
+        { vect3(-1 , 1, 1),TopColor, vect3(1,0) }
     };
     glGenBuffers(1, &Top[0]);
     // Los siguientes comandos le darán características especiales al 'vertexbuffer'
@@ -94,10 +86,10 @@ GLvoid Cube::SetBottomColor(const ColorRGB& RGB)
         Bottom[2]++;
     Vertex3d vertex[] =
     {
-        { vect3(1,-1,-1), BottomColor, vect2(0,1)},
-        { vect3(-1,-1,-1),BottomColor, vect2(1,1)},
-        { vect3(1,-1,1),BottomColor,   vect2(0,0)},
-        { vect3(-1 ,-1, 1),BottomColor,vect2(1,0)  }
+        { vect3(1,-1,-1), BottomColor, vect3(0,1)},
+        { vect3(-1,-1,-1),BottomColor, vect3(1,1)},
+        { vect3(1,-1,1),BottomColor,   vect3(0,0)},
+        { vect3(-1 ,-1, 1),BottomColor,vect3(1,0)  }
     };
     glGenBuffers(1, &Bottom[0]);
     // Los siguientes comandos le darán características especiales al 'vertexbuffer'
@@ -123,10 +115,10 @@ GLvoid Cube::SetLeftColor(const ColorRGB& RGB)
         Left[2]++;
     Vertex3d vertex[] =
     {
-        { vect3(1,-1,-1), LeftColor,  vect2(0,1) },
-        { vect3(1,1,-1),LeftColor ,   vect2(1,1) },
-        { vect3(-1,-1,-1),LeftColor,  vect2(0,0) },
-        { vect3(-1 , 1, -1),LeftColor,vect2(1,0) }
+        { vect3(1,-1,-1), LeftColor,  vect3(0,1) },
+        { vect3(1,1,-1),LeftColor ,   vect3(1,1) },
+        { vect3(-1,-1,-1),LeftColor,  vect3(0,0) },
+        { vect3(-1 , 1, -1),LeftColor,vect3(1,0) }
     };
     glGenBuffers(1, &Left[0]);
     // Los siguientes comandos le darán características especiales al 'vertexbuffer'
@@ -152,10 +144,10 @@ GLvoid Cube::SetRightColor(const ColorRGB& RGB)
         Right[2]++;
     Vertex3d vertex[] =
     {
-        { vect3(1,-1,1), RightColor,  vect2(0,1) },
-        { vect3(1,1,1),RightColor ,   vect2(1,1) },
-        { vect3(-1,-1,1),RightColor,  vect2(0,0) },
-        { vect3(-1 , 1, 1),RightColor,vect2(1,0) }
+        { vect3(1,-1,1), RightColor,  vect3(0,1) },
+        { vect3(1,1,1),RightColor ,   vect3(1,1) },
+        { vect3(-1,-1,1),RightColor,  vect3(0,0) },
+        { vect3(-1 , 1, 1),RightColor,vect3(1,0) }
     };
     glGenBuffers(1, &Right[0]);
     // Los siguientes comandos le darán características especiales al 'vertexbuffer'
@@ -178,10 +170,10 @@ GLvoid Cube::SetFrontColor(const ColorRGB& RGB)
         FreeArray(Front);
     Vertex3d vertex[] =
     {
-        { vect3(1,-1,-1), FrontColor,vect2(0,1) },
-        { vect3(1,1,-1),FrontColor  ,vect2(1,1) },
-        { vect3(1,-1,1),FrontColor  ,vect2(0,0) },
-        { vect3(1 , 1, 1),FrontColor,vect2(1,0) }
+        { vect3(1,-1,-1), FrontColor,vect3(0,1) },
+        { vect3(1,1,-1),FrontColor  ,vect3(1,1) },
+        { vect3(1,-1,1),FrontColor  ,vect3(0,0) },
+        { vect3(1 , 1, 1),FrontColor,vect3(1,0) }
     };
     glGenBuffers(1, &Front[0]);
     // Los siguientes comandos le darán características especiales al 'vertexbuffer'
@@ -206,10 +198,10 @@ GLvoid Cube::SetBackColor(const ColorRGB& RGB)
         Back[2]++;
     Vertex3d vertex[] =
     {
-        { vect3(-1,-1,-1), BackColor,vect2(0,1) },
-        { vect3(-1,1,-1),BackColor  ,vect2(1,1) },
-        { vect3(-1,-1,1),BackColor  ,vect2(0,0) },
-        { vect3(-1 , 1, 1),BackColor,vect2(1,0) }
+        { vect3(-1,-1,-1), BackColor,vect3(0,1) },
+        { vect3(-1,1,-1),BackColor  ,vect3(1,1) },
+        { vect3(-1,-1,1),BackColor  ,vect3(0,0) },
+        { vect3(-1 , 1, 1),BackColor,vect3(1,0) }
     };
     glGenBuffers(1, &Back[0]);
     // Los siguientes comandos le darán características especiales al 'vertexbuffer'
@@ -222,7 +214,6 @@ GLvoid Cube::SetBackColor(const ColorRGB& RGB)
 void Cube::dcRender(const glm::mat4 &m)
 {
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, glm::value_ptr(m));
-    GLtext.Bin();
     dcRender(Top);
     dcRender(Bottom);
     dcRender(Left);
@@ -262,7 +253,7 @@ void Cube::dcRender(const GLuint *vpo)
 
     glVertexAttribPointer(
         2,      // attribute
-        2,                      // number of elements per vertex, here (r,g,b)
+        3,                      // number of elements per vertex, here (r,g,b)
         GL_FLOAT,               // the type of each element
         GL_TRUE,               // take our values as-is
         sizeof(struct Vertex3d),  // stride

@@ -61,6 +61,7 @@ void Malla::dcUpdate()
             graph[Index].Pos.x = Xi[0];
             graph[Index].Pos.y = Xi[1];
             graph[Index].Pos.z = z;
+			graph[Index].coorText = vect3(0,0,0);
             graph[Index].color = mColor;
 			graphF[Index] = z;
 			if(Max < z)

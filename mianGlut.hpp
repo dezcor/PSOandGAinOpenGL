@@ -16,6 +16,7 @@
 #include "Cube.hpp"
 #include "PSO/Enjambre.h"
 #include "GA/GA.h"
+#include "GLTexture.hpp"
 #include <exception>
 
 struct point
@@ -29,15 +30,16 @@ double cuadratica(double *X, int N)
 {
     float x1 = X[0];
     float x2 = X[1];
-    double sum1 = 0,sum2 = 0;
+    double sum1 = 0, sum2 = 0;
     int i;
-    for(i=1; i <= 5 ;i++)
+    for (i = 1; i <= 5; i++)
     {
-        sum1 +=i*cos((i+1)*x1+i);
-        sum2 +=i*cos((i+1)*x2+i);
+        sum1 += i * cos((i + 1) * x1 + i);
+        sum2 += i * cos((i + 1) * x2 + i);
     }
 
-    return sum1*sum2;;
+    return sum1 * sum2;
+    ;
 }
 
 double f5(double *X, int N)
@@ -65,12 +67,13 @@ class App
   public:
     GLuint Width;
     GLuint Height;
-    GLvoid rezise(uint width,uint height)
+    GLvoid rezise(uint width, uint height)
     {
         //glViewport(0, 0, width, height);
         Width = width;
         Height = height;
     }
+
   private:
     // Identificar el vertex buffer
     GLuint vertexbuffer;
@@ -78,7 +81,7 @@ class App
     GLuint programID;
     point Giro;
     Malla *malla;
-    Malla * malla2;
+    Malla *malla2;
     CurvaBezier *curvaBezier;
     CurvaBezier *CurvaBezierCube;
     CamaraView *cmPrespetive;
@@ -89,14 +92,16 @@ class App
     PSO::Enjambre *enjambreI;
     GA::Poblacion *poblacion;
     Malla *Piso;
-    Malla * malla3;
+    Malla *malla3;
     //Cube *cubo;
-	GLuint uniform_mytexture;
+    GLuint uniform_mytexture;
     GLuint MatrixID;
+
+    Texture cuboGA,CuboPSO,CuboPSOI;
     static vector<bool> KEY;
     static vector<bool> KEYS;
 
-public:
+  public:
     GLuint LoadShaders(const char *vertex_file_path, const char *fragment_file_path)
     {
 
@@ -229,7 +234,7 @@ public:
     {
         glUseProgram(programID);
         glm::mat4 model;
-        glm::mat4 tras = glm::translate(glm::mat4(1.0f), glm::vec3(0,2, 0));
+        glm::mat4 tras = glm::translate(glm::mat4(1.0f), glm::vec3(0, 2, 0));
         model = glm::rotate(glm::mat4(1.0f), glm::radians(Riro.x), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(Riro.y), glm::vec3(0, 1, 0)) *
                 glm::rotate(glm::mat4(1.0f), glm::radians(Riro.z), glm::vec3(0, 0, 1));
 
@@ -242,27 +247,28 @@ public:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // draw Objetos
-        glActiveTexture(GL_TEXTURE1);
-	    glUniform1i(uniform_mytexture, /*GL_TEXTURE*/0);
-        
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(uniform_mytexture, /*GL_TEXTURE*/ 0);
+
         try
         {
             /* code */
+            cuboGA.Bin();
             malla->dcRender(GA_vertes);
             poblacion->dcRender(GA_vertes);
+            CuboPSO.Bin();
             Piso->dcRender(cmPrespetive->GetViewPerpetive() * glm::rotate(glm::mat4(1.0f), glm::radians(float(90)), glm::vec3(1, 0, 0)));
-            malla2->dcRender(PSOvertex);
-            enjambre->dcRender(PSOvertex);
             malla3->dcRender(PSOIvertex);
-            enjambreI->dcRender(PSOIvertex);
+            enjambre->dcRender(PSOIvertex);
+            CuboPSOI.Bin();
+            malla2->dcRender(PSOvertex);
+            enjambreI->dcRender(PSOvertex);
         }
-        catch(const std::exception& e)
+        catch (const std::exception &e)
         {
             std::cerr << e.what() << '\n';
         }
-        
-        
-        
+
         //if (isProjection)
         //    cubo->dcRender(cmOrtho->GetViewPerpetive() * glm::scale(glm::mat4(1.0f), glm::vec3(0.1)) * model);
         // CurvaBezierCube->dcRender(vertex_transform);
@@ -275,16 +281,20 @@ public:
         static double timet = glutGet(GLUT_ELAPSED_TIME);
         static double speed = 0.05;
         static bool pausa = true;
-        if (timet + 1000 / 6.0 < glutGet(GLUT_ELAPSED_TIME) && !pausa)
+        if (timet + 1000 / 60.0 < glutGet(GLUT_ELAPSED_TIME) && !pausa)
         {
             //printf("%f\n",glfwGetTime());
-            if (enjambre->isReal() ) enjambre->dcUpdate();
-            if (enjambreI->isReal()) enjambreI->dcUpdate();
-            poblacion->dcUpdate();
+            enjambre->dcUpdate();
+            enjambreI->dcUpdate();
+            if(time +1000/6 < glutGet(GLUT_ELAPSED_TIME))
+            {    
+                poblacion->dcUpdate();
+                time =  glutGet(GLUT_ELAPSED_TIME);
+            }
             timet = glutGet(GLUT_ELAPSED_TIME);
         }
-        if (!enjambre->isReal() && !pausa) enjambre->dcUpdate();
-        if (!enjambreI->isReal() && !pausa) enjambreI->dcUpdate();
+        //if (!enjambre->isReal() && !pausa) enjambre->dcUpdate();
+        //if (!enjambreI->isReal() && !pausa) enjambreI->dcUpdate();
         if (KEY[GLUT_KEY_LEFT])
         {
             cmPrespetive->Move(CamaraView::Movement::LEFT);
@@ -302,19 +312,19 @@ public:
             cmPrespetive->Move(CamaraView::Movement::BACKWARD);
         }
 
-        if(KEYS[27])
+        if (KEYS[27])
         {
             exit(0);
         }
 
-        if(KEYS['R'] | KEYS['r'])
+        if (KEYS['R'] | KEYS['r'])
         {
             cleanup();
             InitElementos();
             pausa = true;
         }
 
-        if(KEY[GLUT_KEY_F2])
+        if (KEY[GLUT_KEY_F2])
         {
             pausa = !pausa;
             KEY[GLUT_KEY_F2] = false;
@@ -341,15 +351,18 @@ public:
         cmOrtho = new CamaraView(glm::vec3(0, 4, 4), -4, 4, 4, -4, 10, -10);
         programID = LoadShaders("cube.v.glsl", "cube.f.glsl");
         MatrixID = glGetUniformLocation(programID, "MVP");
-        uniform_mytexture = glGetUniformLocation(programID,"TexCoord");
+        uniform_mytexture = glGetUniformLocation(programID, "TexCoord");
+        cuboGA.load("GA.jpg");
+        CuboPSO.load("res_texture.png");
+        CuboPSOI.load("PSOI.jpg");
         malla = new Malla;
         Piso = new Malla;
-        malla2  = new Malla;
+        malla2 = new Malla;
         malla3 = new Malla;
         Piso->SetMatrizID(MatrixID);
         Piso->dcUpdate();
         //malla uno
-        malla->SetNumberLines(50);
+        malla->SetNumberLines(60);
         malla->SetLimitesX(-Limi, Limi);
         malla->SetLimitesY(-Limi, Limi);
         malla->SetFuncion(f5);
@@ -359,40 +372,40 @@ public:
 
         //malla2
         Limi = 2.0f;
-        malla2->SetNumberLines(50);
+        malla2->SetNumberLines(60);
         malla2->SetLimitesX(-Limi, Limi);
         malla2->SetLimitesY(-Limi, Limi);
         malla2->SetFuncion(F5);
-        malla2->SetColor(ColorRGB(1, 0, 1));
+        malla2->SetColor(ColorRGB(0, 1, 0));
         malla2->dcUpdate();
         malla2->SetMatrizID(MatrixID);
         //malla3
-        malla3->SetNumberLines(50);
+        malla3->SetNumberLines(60);
         malla3->SetLimitesX(-Limi, Limi);
         malla3->SetLimitesY(-Limi, Limi);
         malla3->SetFuncion(cuadratica);
-        malla3->SetColor(ColorRGB(0, 1, 1));
+        malla3->SetColor(ColorRGB(0, 0, 0.5));
         malla3->dcUpdate();
         malla3->SetMatrizID(MatrixID);
         Riro = glm::vec3(360 - 90, 0, 0);
         //PSO inicializacion del Enjambre de particulas
-        enjambre = new PSO::Enjambre(100, 2, -Limi, Limi, -Limi * .15, Limi * .15, 2, 2, 0.7, PSO::Enjambre::Orden::MINIMO);
-        enjambre->setFuncion(F5);
+        enjambre = new PSO::Enjambre(200, 2, -Limi, Limi, -Limi * .15, Limi * .15, 2, 2, 0.7, PSO::Enjambre::Orden::MINIMO);
+        enjambre->setFuncion(cuadratica);
         enjambre->SetReal(false);
         enjambre->SetNumberPoints(5);
         enjambre->SetMatrizID(MatrixID);
         enjambre->SetObject(new Cube());
         enjambre->SetOffLimites(false);
-        enjambre->SetScalar(malla2->getScalar());
+        enjambre->SetScalar(malla3->getScalar());
         //PSOI inicializacion del Enjambre de particulas
-        enjambreI = new PSO::EnjambrePesoI(200, 2, -Limi, Limi, -Limi * .15, Limi * .15, 2.05, 2.05, 0.7, PSO::Enjambre::Orden::MINIMO);
-        enjambreI->setFuncion(cuadratica);
+        enjambreI = new PSO::Enjambre(200, 2, -Limi, Limi, -Limi * .15, Limi * .15, 2.05, 2.05, 0.7, PSO::Enjambre::Orden::MINIMO);
+        enjambreI->setFuncion(F5);
         enjambreI->SetReal(false);
         enjambreI->SetNumberPoints(5);
         enjambreI->SetMatrizID(MatrixID);
-        enjambreI->SetObject(new Cube(ColorRGB(1, 0, 0)));
+        enjambreI->SetObject(new Cube(ColorRGB(0.5, 0.5, 0.5)));
         enjambreI->SetOffLimites(false);
-        enjambreI->SetScalar(malla3->getScalar());
+        enjambreI->SetScalar(malla2->getScalar());
         //GA inicializacion de la poblacion
         Limi = 1.0f;
         poblacion = new GA::Poblacion();
@@ -431,20 +444,20 @@ public:
         glDepthFunc(GL_LESS);
     }
 
-    void moveCamara(int x,int y)
+    void moveCamara(int x, int y)
     {
         //printf("%d %d\n", x, y);
-        double xpos=Width / 2,ypos= Height / 2;
+        double xpos = Width / 2, ypos = Height / 2;
         static float lastX = x;
         static float lastY = y;
-        float xoffset = lastX- xpos;
+        float xoffset = lastX - xpos;
         float yoffset = ypos - lastY;
         //printf("%f %f\n", xoffset, yoffset); // reversed since y-coordinates range from bottom to top
         lastX = x;
         lastY = y;
-        if((xoffset != 0 || yoffset != 0)&& isProjection)
+        if ((xoffset != 0 || yoffset != 0) && isProjection)
         {
-            cmPrespetive->ProcessMouseMovement(xoffset,yoffset);
+            cmPrespetive->ProcessMouseMovement(xoffset, yoffset);
             glutWarpPointer(Width / 2, Height / 2);
         }
     }
@@ -461,21 +474,20 @@ public:
         KEY[key] = false;
     }
 
-    static void KeyN(u_char key,int x,int y)
+    static void KeyN(u_char key, int x, int y)
     {
         KEYS[key] = true;
     }
 
-    static void KeyNUp(u_char key,int x,int y)
+    static void KeyNUp(u_char key, int x, int y)
     {
         KEYS[key] = false;
     }
 };
 
 glm::vec3 App::Riro = glm::vec3(0);
-vector<bool> App::KEY = vector<bool>(255,false);
-vector<bool> App::KEYS = vector<bool>(255,false);
-
+vector<bool> App::KEY = vector<bool>(255, false);
+vector<bool> App::KEYS = vector<bool>(255, false);
 
 App app;
 void display()
@@ -490,38 +502,41 @@ void idle()
     glutPostRedisplay();
 }
 
-void reshape(int w,int h)
+void reshape(int w, int h)
 {
-    app.rezise(w,h);
-    glViewport(0,0,w,h);
+    app.rezise(w, h);
+    glViewport(0, 0, w, h);
 }
 
-void motion(int x,int y)
+void motion(int x, int y)
 {
-    app.moveCamara(x,y);
+    app.moveCamara(x, y);
 }
 
-int mainGLUT(int argc, char* argv[]) {
-    app.rezise(770,800);
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-	glutInitWindowSize(app.Height,app.Width);
-	glutCreateWindow("PSO and GA in glut");
+int mainGLUT(int argc, char *argv[])
+{
+    app.rezise(770, 800);
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
+    glutInitWindowSize(app.Height, app.Width);
+    glutCreateWindow("PSO and GA in glut");
 
-	GLenum glew_status = glewInit();
-	if (GLEW_OK != glew_status) {
-		fprintf(stderr, "Error: %s\n", glewGetErrorString(glew_status));
-		return 1;
-	}
+    GLenum glew_status = glewInit();
+    if (GLEW_OK != glew_status)
+    {
+        fprintf(stderr, "Error: %s\n", glewGetErrorString(glew_status));
+        return 1;
+    }
 
-	if (!GLEW_VERSION_3_0) {
-		fprintf(stderr, "No support for OpenGL 3.0 found\n");
-		return 1;
-	}
+    if (!GLEW_VERSION_3_0)
+    {
+        fprintf(stderr, "No support for OpenGL 3.0 found\n");
+        return 1;
+    }
 
-	app.InitElementos();
+    app.InitElementos();
     glutSetCursor(GLUT_CURSOR_CROSSHAIR);
-    glutWarpPointer(app.Width/2, app.Height/2);
+    glutWarpPointer(app.Width / 2, app.Height / 2);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     //glutIdleFunc(display);
@@ -534,7 +549,7 @@ int mainGLUT(int argc, char* argv[]) {
     glutMotionFunc(motion);
     glutMainLoop();
 
-	return 0;
+    return 0;
 }
 
 #endif //_CAMARAMALLAGLFW_H_

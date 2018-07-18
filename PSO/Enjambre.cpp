@@ -318,13 +318,14 @@ void Enjambre::dcRender(const glm::mat4 &m)
     }
     else
     {
-        glm::mat4 sScalar = glm::scale(glm::mat4(1.0f), glm::vec3(0.02));
-        glm::mat4 tras, mvp;
+        // glm::mat4 sScalar = glm::scale(glm::mat4(1.0f), glm::vec3(0.02));
+        // glm::mat4 tras, mvp;
         for (uint i = 0; i < curva.size(); i++)
         {
-            tras = glm::translate(glm::mat4(1.0f), curva[i].GetPoint(0));
-            mvp = m * tras * sScalar;
-            Objeto->dcRender(mvp);
+            // tras = glm::translate(glm::mat4(1.0f), curva[i].GetPoint(0));
+            // mvp = m * tras * sScalar;
+            // Objeto->dcRender(mvp);
+            curva[i].dcRender(m);
         }
     }
 }
@@ -370,6 +371,8 @@ void Enjambre::dcUpdate()
                 for (uint j = 0; j < NumeroParticulas; j++)
                 {
                     curva[j].SetDelete(false);
+                    curva[j].SetObject(Objeto);
+                    curva[j].SetScalar(0.02);
                 }
             }
             float medio = (Scalar.x + Scalar.y) / 2 * Scalar.z;
@@ -399,6 +402,7 @@ void Enjambre::dcUpdate()
             for (uint j = 0; j < NumeroParticulas; j++)
             {
                 curva[j].GenerarCuba();
+                curva[j].dcUpdate();
             }
         }
     }
