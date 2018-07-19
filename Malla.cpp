@@ -1,5 +1,5 @@
 #include "Malla.hpp"
-
+#define MAXFLOAT 3.40282e+038
 Malla::Malla()
 {
     mColor = ColorRGB(0,0,0);
@@ -48,7 +48,7 @@ void Malla::dcUpdate()
     uint32_t M = (int)mNumberTheLines.y;
 	vector<Vertex3d> graph(N * M);
 	vector<GLfloat> graphF(N * M);
-
+	
 	GLfloat Max=-MAXFLOAT,Min = MAXFLOAT;
     GLfloat deltaX = (mLimitesX.y-mLimitesX.x)/N,deltaY = (mLimitesY.y-mLimitesY.x)/M;
     vector<double> Xi(2u);
@@ -70,6 +70,7 @@ void Malla::dcUpdate()
 				Min = z;
 		}
 	}
+	std::cout << "maximi :" << Max << std::endl;
 	GLfloat Scalar = (Max-Min)>0?(mLimitesX.y-mLimitesX.x)/(Max-Min):1;
 	this->Scalar = glm::vec3(Max,Min,Scalar);
 	for (int i = 0; i < N; i++) {
@@ -85,7 +86,7 @@ void Malla::dcUpdate()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex3d) * graph.size(), graph.data(), GL_STATIC_DRAW);
 
 	// Create an array of indices into the vertex array that traces both horizontal and vertical lines
-	vector<GLushort> indices(N * (M)* 4);
+	vector<GLuint> indices(N * (M)* 4);
 	int i = 0;
 
 	for (int y = 0; y < M; y++) {
@@ -103,7 +104,7 @@ void Malla::dcUpdate()
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mMalla[1]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLulong)*indices.size(), indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*indices.size(), indices.data(), GL_STATIC_DRAW);
    
 }
 
@@ -122,7 +123,7 @@ void Malla::dcRender(const GLuint *vpo)
     );
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vpo[1]);;
-	glDrawElements(GL_LINES,  N * M * 4, GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_LINES,  N * M * 4, GL_UNSIGNED_INT, 0);
 
 	/* Stop using the vertex buffer object */
 	glDisableVertexAttribArray(0);

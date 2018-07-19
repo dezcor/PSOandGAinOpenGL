@@ -17,8 +17,8 @@ private:
     /* data */
     std::vector<glm::vec3> mPoints;
     std::vector<Vertex3> mPointsTime;
-    uint mPointsDraw;
-    uint mPointsLines;
+    GLuint mPointsDraw;
+    GLuint mPointsLines;
     bool Inicio;
     std::vector<float> mVector;
     glm::vec3 powPSO(glm::vec3& Point,uint32_t N);

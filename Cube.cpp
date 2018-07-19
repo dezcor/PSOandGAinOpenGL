@@ -49,7 +49,7 @@ ColorRGB Cube::GetTopColor()
 
 GLvoid Cube::SetTopColor(const ColorRGB& RGB)
 {
-    if (TopColor == RGB)return;
+    //if (TopColor == RGB)return;
 	TopColor = RGB;
     if(Top[2]>0)
         FreeArray(Top);
@@ -78,7 +78,7 @@ ColorRGB Cube::GetBottomColor()
 
 GLvoid Cube::SetBottomColor(const ColorRGB& RGB)
 {
-    if (BottomColor == RGB)return;
+    //if (BottomColor == RGB)return;
 	BottomColor = RGB;
     if(Bottom[2]>0)
         FreeArray(Bottom);
@@ -107,7 +107,7 @@ ColorRGB Cube::GetLeftColor()
 
 GLvoid Cube::SetLeftColor(const ColorRGB& RGB)
 {
-    if (LeftColor == RGB)return;
+    //if (LeftColor == RGB)return;
 	LeftColor = RGB;
     if(Left[2]>0)
         FreeArray(Left);
@@ -136,7 +136,7 @@ ColorRGB Cube::GetRightColor()
 
 GLvoid Cube::SetRightColor(const ColorRGB& RGB)
 {
-    if (RightColor == RGB)return;
+    //if (RightColor == RGB)return;
 	RightColor = RGB;
     if(Right[2]>0)
         FreeArray(Right);
@@ -164,7 +164,7 @@ ColorRGB Cube::GetFrontColor()
 
 GLvoid Cube::SetFrontColor(const ColorRGB& RGB)
 {
-    if (FrontColor == RGB)return;
+    //if (FrontColor == RGB)return;
 	FrontColor = RGB;
     if(Front[2]>0)
         FreeArray(Front);
@@ -190,7 +190,7 @@ ColorRGB Cube::GetBackColor()
 
 GLvoid Cube::SetBackColor(const ColorRGB& RGB)
 {
-    if (BackColor == RGB)return;
+    //if (BackColor == RGB)return;
 	BackColor = RGB;
     if(Back[2]>0)
         FreeArray(Back);

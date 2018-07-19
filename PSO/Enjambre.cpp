@@ -320,7 +320,7 @@ void Enjambre::dcRender(const glm::mat4 &m)
     {
         // glm::mat4 sScalar = glm::scale(glm::mat4(1.0f), glm::vec3(0.02));
         // glm::mat4 tras, mvp;
-        for (uint i = 0; i < curva.size(); i++)
+        for (GLuint i = 0; i < curva.size(); i++)
         {
             // tras = glm::translate(glm::mat4(1.0f), curva[i].GetPoint(0));
             // mvp = m * tras * sScalar;
@@ -368,7 +368,7 @@ void Enjambre::dcUpdate()
                 this->EvaluarEjambreI();
                 inicio = false;
                 curva.resize(NumeroParticulas);
-                for (uint j = 0; j < NumeroParticulas; j++)
+                for (GLuint j = 0; j < NumeroParticulas; j++)
                 {
                     curva[j].SetDelete(false);
                     curva[j].SetObject(Objeto);
@@ -376,7 +376,7 @@ void Enjambre::dcUpdate()
                 }
             }
             float medio = (Scalar.x + Scalar.y) / 2 * Scalar.z;
-            for (uint j = 0; j < NumeroParticulas; j++)
+            for (GLuint j = 0; j < NumeroParticulas; j++)
             {
                 curva[j].clear();
                 double X[3] = {pEnj[j].Xi[0], pEnj[j].Xi[1], pEnj[j].Fxi* Scalar.z - medio};
@@ -392,14 +392,14 @@ void Enjambre::dcUpdate()
                 /*EvaluarEnjambre*/
                 this->EvaluarEjambre();
                 /*Mostrar Enjambre*/
-                for (uint j = 0; j < NumeroParticulas; j++)
+                for (GLuint j = 0; j < NumeroParticulas; j++)
                 {
                     double X[3] = {pEnj[j].Xi[0], pEnj[j].Xi[1], pEnj[j].Fxi* Scalar.z - medio};
                     curva[j].SetPoint(X, NumeroParametrosPorParticula + 1);
                 }
                 i++;
             }
-            for (uint j = 0; j < NumeroParticulas; j++)
+            for (GLuint j = 0; j < NumeroParticulas; j++)
             {
                 curva[j].GenerarCuba();
                 curva[j].dcUpdate();
@@ -412,6 +412,7 @@ void Enjambre::SetObject(Render *objeto)
 {
     Objeto = objeto;
     Objeto->dcUpdate();
+    Objeto->SetMatrizID(MatrixID);
 }
 
 void Enjambre::Avanzar()
@@ -424,13 +425,13 @@ void Enjambre::Avanzar()
     {
 
         mTermino = curva[0].isTermino();
-        for (uint j = 0; j < NumeroParticulas; j++)
+        for (GLuint j = 0; j < NumeroParticulas; j++)
         {
             curva[j].dcUpdate();
         }
         if(mTermino)
         {
-            for (uint j = 0; j < NumeroParticulas; j++)
+            for (GLuint j = 0; j < NumeroParticulas; j++)
             {
                 curva[j].SetTermino(false);
             }
@@ -492,8 +493,8 @@ EnjambrePesoI::~EnjambrePesoI()
 
 void EnjambrePesoI::ActualizarVelocidad()
 {
-    uint i;
-    u_char d;
+    GLuint i;
+    GLubyte d;
     double E1, E2, aux;
     for (i = 0; i < NumeroParticulas; i++)
     {

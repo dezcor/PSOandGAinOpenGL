@@ -6,6 +6,7 @@
 /* Using the GLUT library for the base windowing setup */
 #include <GL/glut.h>
 // Incluir GLM
+#define M_PIf32 3.14159265358979323846
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -67,7 +68,7 @@ class App
   public:
     GLuint Width;
     GLuint Height;
-    GLvoid rezise(uint width, uint height)
+    GLvoid rezise(GLuint width, GLuint height)
     {
         //glViewport(0, 0, width, height);
         Width = width;
@@ -93,7 +94,6 @@ class App
     GA::Poblacion *poblacion;
     Malla *Piso;
     Malla *malla3;
-    //Cube *cubo;
     GLuint uniform_mytexture;
     GLuint MatrixID;
 
@@ -224,7 +224,6 @@ class App
         //poblacion->MostrarPoblacion();
         std::cout << "Mejor Individuo :" << poblacion->GetidMejor() << std::endl;
         poblacion->MostrarIndividuo(poblacion->GetidMejor());
-        //delete cubo;
         delete enjambre;
         delete enjambreI;
         delete poblacion;
@@ -250,27 +249,17 @@ class App
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(uniform_mytexture, /*GL_TEXTURE*/ 0);
 
-        try
-        {
-            /* code */
-            cuboGA.Bin();
-            malla->dcRender(GA_vertes);
-            poblacion->dcRender(GA_vertes);
-            CuboPSO.Bin();
-            Piso->dcRender(cmPrespetive->GetViewPerpetive() * glm::rotate(glm::mat4(1.0f), glm::radians(float(90)), glm::vec3(1, 0, 0)));
-            malla3->dcRender(PSOIvertex);
-            enjambre->dcRender(PSOIvertex);
-            CuboPSOI.Bin();
-            malla2->dcRender(PSOvertex);
-            enjambreI->dcRender(PSOvertex);
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << e.what() << '\n';
-        }
-
-        //if (isProjection)
-        //    cubo->dcRender(cmOrtho->GetViewPerpetive() * glm::scale(glm::mat4(1.0f), glm::vec3(0.1)) * model);
+        /* code */
+        cuboGA.Bin();
+        malla->dcRender(GA_vertes);
+        poblacion->dcRender(GA_vertes);
+        CuboPSO.Bin();
+        Piso->dcRender(cmPrespetive->GetViewPerpetive() * glm::rotate(glm::mat4(1.0f), glm::radians(float(90)), glm::vec3(1, 0, 0)));
+        malla3->dcRender(PSOIvertex);
+        enjambre->dcRender(PSOIvertex);
+        CuboPSOI.Bin();
+        malla2->dcRender(PSOvertex);
+        enjambreI->dcRender(PSOvertex);
         // CurvaBezierCube->dcRender(vertex_transform);
         // curvaBezier->dcRender(vertex_transform);
     }
@@ -411,7 +400,7 @@ class App
         poblacion = new GA::Poblacion();
         poblacion->setFuncion(f5);
         poblacion->SetMatrizID(MatrixID);
-        std::vector<uint> up = {16, 16};
+        std::vector<GLuint> up = {16, 16};
         std::vector<float> limites = {-Limi, Limi};
         poblacion->SetMaximo(true);
         poblacion->SetLimites(limites);
@@ -419,26 +408,8 @@ class App
         poblacion->resizePoblacion(100);
         poblacion->setProbabilidadCruza(0.9);
         poblacion->setProbabilidadMuta(0.01);
-        //cubo = new Cube();
         poblacion->SetObject(new Cube(ColorRGB(0, 1, 0)));
         poblacion->SetScalar(malla->getScalar());
-        // curvaBezier = new CurvaBezier;
-        // curvaBezier->SetScalar(0.01);
-        // CurvaBezierCube = new CurvaBezier;
-        // CurvaBezierCube->SetScalar(0.01);
-        // vector<glm::vec3> points ={{0,0,0},{0.7,0.5,0},{-1,1,0},{1.4,1.5,0},{0.2,2,0},{-1,1,1}};
-        // curvaBezier->SetPoints(points);
-        // curvaBezier->dcUpdate();
-        // curvaBezier->SetMatrizID(MatrixID);
-        // curvaBezier->SetObject(new Cube);
-        // curvaBezier->SetDrawLines(true);
-        // vector<glm::vec3> points2 ={{0,0,0},{0.4,0.5,-1},{-1,1,2},{2,3,1},{0.2,2,0},{-1,1,1}};
-        // CurvaBezierCube->SetPoints(points2);
-        // CurvaBezierCube->dcUpdate();
-        // CurvaBezierCube->SetMatrizID(MatrixID);
-        // CurvaBezierCube->SetObject(new Cube);
-        // CurvaBezierCube->SetDrawLines(true);
-        // Habilidad el test de profundidad
         glEnable(GL_DEPTH_TEST);
         // Aceptar el fragmento si está más cerca de la cámara que el fragmento anterior
         glDepthFunc(GL_LESS);
@@ -474,12 +445,12 @@ class App
         KEY[key] = false;
     }
 
-    static void KeyN(u_char key, int x, int y)
+    static void KeyN(GLubyte key, int x, int y)
     {
         KEYS[key] = true;
     }
 
-    static void KeyNUp(u_char key, int x, int y)
+    static void KeyNUp(GLubyte key, int x, int y)
     {
         KEYS[key] = false;
     }

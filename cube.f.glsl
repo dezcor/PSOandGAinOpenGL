@@ -11,5 +11,5 @@ void main(){
   if(TexCoord.z < 0.5f)
     FragColor = vec4(fragmentColor, 1.0);
   else
-    FragColor = texture2D(ourTexture, vec2(TexCoord.x,TexCoord.y)) * vec4(fragmentColor, 1.0);
+    FragColor = texture(ourTexture, vec2(TexCoord.x,TexCoord.y)) * vec4(fragmentColor, 1.0);
 }

@@ -30,7 +30,7 @@ class Camara
         cleanup();
         glfwTerminate();
     }
-    GLvoid rezise(uint W,uint H)
+    GLvoid rezise(GLuint W,GLuint H)
     {
         Width = W;
         Height = H;

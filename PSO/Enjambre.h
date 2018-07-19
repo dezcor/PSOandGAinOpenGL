@@ -107,7 +107,7 @@ namespace PSO
         void SetObject(Render * objeto);
 
         //Set Curvas
-        void SetNumberPoints(const uint N){ mNumberPoints = N;}
+        void SetNumberPoints(const GLuint N){ mNumberPoints = N;}
         void SetReal(bool is){ mIsReal = is;}
 
         //Get

@@ -340,7 +340,7 @@ class CamaraMalla : public Camara
         poblacion = new GA::Poblacion();
         poblacion->setFuncion(f5);
         poblacion->SetMatrizID(MatrixID);
-        std::vector<uint> up = {16, 16};
+        std::vector<GLuint> up = {16, 16};
         std::vector<float> limites = {-Limi, Limi};
         poblacion->SetMaximo(true);
         poblacion->SetLimites(limites);

@@ -19,7 +19,7 @@ void Texture::Bin()
 bool Texture::load(const std::string &path)
 {
     int W,H,size;
-    u_char *bitmap = stbi_load(path.c_str(),&W,&H,&size,4);
+    GLubyte *bitmap = stbi_load(path.c_str(),&W,&H,&size,4);
     if(bitmap ==NULL)
         return false;
     glGenTextures(1, &texture_id);

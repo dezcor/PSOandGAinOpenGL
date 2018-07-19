@@ -310,9 +310,9 @@ void Poblacion::Run(int64_t MaxGeneraciones, float Error)
 void Poblacion::Muta()
 {
 	float random;
-	for (uint i = 0; i < SizePoblacion; i++)
+	for (GLuint i = 0; i < SizePoblacion; i++)
 	{
-		for (uint j = 0; j < SizeCromosoma; j++)
+		for (GLuint j = 0; j < SizeCromosoma; j++)
 		{
 			random = (double)rand() / RAND_MAX;
 			if (random < Pm)
@@ -327,7 +327,7 @@ void Poblacion::ConservarMejor()
 {
 	if(Maximo)
 	{
-		for (uint i = 0; i < SizePoblacion; i++)
+		for (GLuint i = 0; i < SizePoblacion; i++)
 		{
 			if (individuos[this->idMejor].GetObjetivo() < individuos[i].GetObjetivo())
 			{
@@ -337,7 +337,7 @@ void Poblacion::ConservarMejor()
 	}
 	else
 	{
-		for (uint i = 0; i < SizePoblacion; i++)
+		for (GLuint i = 0; i < SizePoblacion; i++)
 		{
 			if (individuos[this->idMejor].GetObjetivo() > individuos[i].GetObjetivo())
 			{
@@ -351,7 +351,7 @@ void Poblacion::ConservarMejor()
 void Poblacion::ActualizarPoblacion()
 {
 	//sort(individuos.begin(),individuos.end(),(isMaximo()?fmaximo:fminimo));
-	for (uint i = 0; i < SizePoblacion; i++)
+	for (GLuint i = 0; i < SizePoblacion; i++)
 	{
 		if (i != idMejor)
 		{
@@ -364,11 +364,11 @@ void Poblacion::ActualizarPoblacion()
 void Poblacion::DecodificarToInt(Individuo &individuo)
 {
 	int Init = 0, next = 0, Numero;
-	for (uint i = 0; i < this->NumeroDeGenes; i++)
+	for (GLuint i = 0; i < this->NumeroDeGenes; i++)
 	{
 		next += NumeroBitGet[i];
 		Numero = 0;
-		for (uint j = Init, k = 0; j < next; j++, k++)
+		for (GLuint j = Init, k = 0; j < next; j++, k++)
 		{
 			Numero = Numero | ((individuo[j] == 1) ? 1 << k : 0);
 		}
@@ -416,7 +416,7 @@ void Poblacion::MostrarPoblacion()
 /*********Render**********/
 void Poblacion::dcRender(const glm::mat4 &m)
 {
-    glm::mat4 scalar = glm::scale(glm::mat4(1.0f),glm::vec3(0.02));
+    glm::mat4 scalar = glm::scale(glm::mat4(1.0f),glm::vec3(0.02,0.02,0.02));
     glm::mat4 tras,mvp;
     static size_t i = 0;
     static bool inicio = true;
@@ -455,6 +455,7 @@ void Poblacion::SetObject(Render * objeto)
 {
     Objecto = objeto;
     Objecto->dcUpdate();
+	Objecto->SetMatrizID(MatrixID);
 }
 
 }; // namespace GA
