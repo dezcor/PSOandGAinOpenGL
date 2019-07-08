@@ -338,12 +338,12 @@ class App
         float Limi = 1.0f;
         cmPrespetive = new CamaraView(glm::vec3(0, 1, 1), glm::radians(45.0f), (float)this->Width / (float)this->Height, 0.1f, 100.0f);
         cmOrtho = new CamaraView(glm::vec3(0, 4, 4), -4, 4, 4, -4, 10, -10);
-        programID = LoadShaders("cube.v.glsl", "cube.f.glsl");
+        programID = LoadShaders("res/cube.v.glsl", "res/cube.f.glsl");
         MatrixID = glGetUniformLocation(programID, "MVP");
         uniform_mytexture = glGetUniformLocation(programID, "TexCoord");
-        cuboGA.load("GA.jpg");
-        CuboPSO.load("res_texture.png");
-        CuboPSOI.load("PSOI.jpg");
+        cuboGA.load("res/GA.jpg");
+        CuboPSO.load("res/res_texture.png");
+        CuboPSOI.load("res/PSOI.jpg");
         malla = new Malla;
         Piso = new Malla;
         malla2 = new Malla;

@@ -122,7 +122,7 @@ void Malla::dcRender(const GLuint *vpo)
         (GLvoid*) offsetof(Vertex3d, Vertex3d::color)  // offset
     );
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vpo[1]);;
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vpo[1]);
 	glDrawElements(GL_LINES,  N * M * 4, GL_UNSIGNED_INT, 0);
 
 	/* Stop using the vertex buffer object */

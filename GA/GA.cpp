@@ -196,15 +196,15 @@ void Poblacion::Ruleta()
 	/*******************Insertar Codigo*************/
 	float maxR = 1.0 / SumFitness;
 	if(Maximo)
-	for (int i = 0; i < this->GetsizePoblacion(); i++)
-	{
-		individuos[i].SetProbSel(individuos[i].GetFitness() * maxR);
-	}
+		for (int i = 0; i < this->GetsizePoblacion(); i++)
+		{
+			individuos[i].SetProbSel(individuos[i].GetFitness() * maxR);
+		}
 	else
-	for (int i = 0; i < this->GetsizePoblacion(); i++)
-	{
-		individuos[i].SetProbSel(1.0-(individuos[i].GetFitness() * maxR));
-	}
+		for (int i = 0; i < this->GetsizePoblacion(); i++)
+		{
+			individuos[i].SetProbSel(1.0-(individuos[i].GetFitness() * maxR));
+		}
 	float sum, aux;
 	int i, j;
 	for (i = 0, j = 0, sum = 0; i < this->GetsizePoblacion(); i++, j = 0, sum = 0)
@@ -312,12 +312,14 @@ void Poblacion::Muta()
 	float random;
 	for (GLuint i = 0; i < SizePoblacion; i++)
 	{
+		//if(NewIndividuos[i].GetFitness() < NewIndividuos[idMejor].GetFitness())
 		for (GLuint j = 0; j < SizeCromosoma; j++)
 		{
 			random = (double)rand() / RAND_MAX;
 			if (random < Pm)
 			{
 				NewIndividuos[i][j] = !NewIndividuos[i][j];
+				break;
 			}
 		}
 	}
@@ -420,7 +422,7 @@ void Poblacion::dcRender(const glm::mat4 &m)
     glm::mat4 tras,mvp;
     static size_t i = 0;
     static bool inicio = true;
-    float medio = (Scalar.x-Scalar.y)/2 * Scalar.z;
+    float medio = (Scalar.x+Scalar.y)/2 * Scalar.z;
     for(size_t i =0; i < SizePoblacion;i++)
     {
         glm::vec3 X= glm::vec3(individuos[i].GetValor(0),individuos[i].GetValor(1),individuos[i].GetObjetivo()*Scalar.z-medio);

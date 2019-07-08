@@ -6,8 +6,8 @@
 #include "Malla.hpp"
 #include "CurvaBezier.hpp"
 #include "Cube.hpp"
-#include "PSO/Enjambre.h"
-#include "GA/GA.h"
+#include "../PSO/Enjambre.h"
+#include "../GA/GA.h"
 #include <exception>
 #include "GLTexture.hpp"
 
@@ -158,6 +158,7 @@ class CamaraMalla : public Camara
     {
         static double time = glfwGetTime();
         static double timet = glfwGetTime();
+        // static double timeG = glfwGetTime();
         static double speed = 0.05;
         static bool pausa = true;
         if (timet + 1 / 6.0 < glfwGetTime() && !pausa)
@@ -168,6 +169,14 @@ class CamaraMalla : public Camara
             poblacion->dcUpdate();
             timet = glfwGetTime();
         }
+
+        // if (timeG + 1 / 6.0 * 5 < glfwGetTime() && !pausa)
+        // {
+            // //printf("%f\n",glfwGetTime());
+            // poblacion->dcUpdate();
+            // timeG = glfwGetTime();
+        // }
+
         if (!enjambre->isReal() && !pausa) enjambre->dcUpdate();
         if (!enjambreI->isReal() && !pausa) enjambreI->dcUpdate();
         double xpos=0,ypos=0;
@@ -275,15 +284,15 @@ class CamaraMalla : public Camara
         glGenVertexArrays(1, &VertexArrayID);
         glBindVertexArray(VertexArrayID);
 
-        float Limi = 1.0f;
+        float Limi = 2.0f;
         cmPrespetive = new CamaraView(glm::vec3(0, 1, 1), glm::radians(45.0f), (float)this->Width / (float)this->Height, 0.1f, 100.0f);
         cmOrtho = new CamaraView(glm::vec3(0, 4, 4), -4, 4, 4, -4, 10, -10);
-        programID = LoadShaders("cube.v.glsl", "cube.f.glsl");
+        programID = LoadShaders("res/cube.v.glsl", "res/cube.f.glsl");
         MatrixID = glGetUniformLocation(programID, "MVP");
         uniform_mytexture = glGetUniformLocation(programID,"TexCoord");
-        cuboGA.load("GA.jpg");
-        CuboPSO.load("res_texture.png");
-        CuboPSOI.load("PSOI.jpg");
+        cuboGA.load("res/GA.jpg");
+        CuboPSO.load("res/res_texture.png");
+        CuboPSOI.load("res/PSOI.jpg");
         malla = new Malla;
         Piso = new Malla;
         malla2  = new Malla;
@@ -291,10 +300,10 @@ class CamaraMalla : public Camara
         Piso->SetMatrizID(MatrixID);
         Piso->dcUpdate();
         //malla uno
-        malla->SetNumberLines(50);
+        malla->SetNumberLines(100);
         malla->SetLimitesX(-Limi, Limi);
         malla->SetLimitesY(-Limi, Limi);
-        malla->SetFuncion(f5);
+        malla->SetFuncion(cuadratica);
         malla->SetColor(ColorRGB(1, 1, 0));
         malla->dcUpdate();
         malla->SetMatrizID(MatrixID);
@@ -327,7 +336,7 @@ class CamaraMalla : public Camara
         enjambre->SetOffLimites(false);
         enjambre->SetScalar(malla3->getScalar());
         //PSOI inicializacion del Enjambre de particulas
-        enjambreI = new PSO::EnjambrePesoI(200, 2, -Limi, Limi, -Limi * .15, Limi * .15, 2.05, 2.05, 0.7, PSO::Enjambre::Orden::MINIMO);
+        enjambreI = new PSO::EnjambrePesoI(200, 2, -Limi, Limi, -Limi * .15, Limi * .15, 2.05, 2.05, 0.7, PSO::Enjambre::Orden::MAXIMO);
         enjambreI->setFuncion(cuadratica);
         enjambreI->SetReal(false);
         enjambreI->SetNumberPoints(5);
@@ -336,21 +345,22 @@ class CamaraMalla : public Camara
         enjambreI->SetOffLimites(false);
         enjambreI->SetScalar(malla2->getScalar());
         //GA inicializacion de la poblacion
-        Limi = 1.0f;
+        Limi = 2.0f;
         poblacion = new GA::Poblacion();
-        poblacion->setFuncion(f5);
+        poblacion->setFuncion(cuadratica);
         poblacion->SetMatrizID(MatrixID);
         std::vector<GLuint> up = {16, 16};
         std::vector<float> limites = {-Limi, Limi};
         poblacion->SetMaximo(true);
         poblacion->SetLimites(limites);
         poblacion->SetNumBitGen(up);
-        poblacion->resizePoblacion(100);
-        poblacion->setProbabilidadCruza(0.9);
-        poblacion->setProbabilidadMuta(0.01);
+        poblacion->resizePoblacion(200);
+        poblacion->setProbabilidadCruza(0.5);
+        poblacion->setProbabilidadMuta(0.3);
         cubo = new Cube();
         poblacion->SetObject(new Cube(ColorRGB(0, 1, 0)));
         poblacion->SetScalar(malla->getScalar());
+        cubo->SetMatrizID(MatrixID);
         // curvaBezier = new CurvaBezier;
         // curvaBezier->SetScalar(0.01);
         // CurvaBezierCube = new CurvaBezier;
@@ -376,7 +386,7 @@ class CamaraMalla : public Camara
 
     static void Key(GLFWwindow *window, int key, int estado, int x, int y)
     {
-        printf("%d %d %d %d\n", key, estado, x, y);
+        //printf("%d %d %d %d\n", key, estado, x, y);
         if(x == GLFW_PRESS)
             KEY[key] = true;
         else if(x == 0)

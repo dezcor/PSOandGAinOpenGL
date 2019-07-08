@@ -5,8 +5,8 @@
 #include <ctime>
 #include <cstdlib>
 #include <math.h>
-#include "../Render.hpp"
-#include "../CurvaBezier.hpp"
+#include "../src/Render.hpp"
+#include "../src/CurvaBezier.hpp"
 
 using namespace std;
 namespace PSO 

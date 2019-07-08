@@ -7,7 +7,7 @@
 #include <ctime>
 #include <cmath>
 #include <exception>
-#include "../Render.hpp"
+#include "../src/Render.hpp"
 
 using namespace std;
 
